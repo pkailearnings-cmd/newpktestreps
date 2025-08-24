@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}ATS Tailor - Home{% endblock %}
+{% block content %}
+<h1>Upload Resume & Analyze Job</h1>
+
+<section class="card">
+  <h2>1) Upload a resume</h2>
+  <form action="{{ url_for('main.upload_resume') }}" method="post" enctype="multipart/form-data">
+    <input type="file" name="resume_file" accept=".pdf,.docx,.txt" required />
+    <button type="submit">Upload</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>2) Paste job post URL</h2>
+  <form action="{{ url_for('main.analyze') }}" method="post">
+    <label for="resume">Choose a resume:</label>
+    <select name="resume_id" id="resume" required>
+      <option value="" disabled selected>Select one</option>
+      {% for r in resumes %}
+        <option value="{{ r.id }}">{{ r.filename }} ({{ r.uploaded_at.strftime('%Y-%m-%d') }})</option>
+      {% endfor %}
+    </select>
+    <input type="url" name="job_url" placeholder="https://example.com/job-posting" required />
+    <button type="submit">Analyze</button>
+  </form>
+</section>
+{% endblock %}
