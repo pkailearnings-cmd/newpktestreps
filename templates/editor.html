@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}ATS Tailor - Editor{% endblock %}
+{% block content %}
+<h1>Tailor & Evaluate</h1>
+
+<section class="grid">
+  <div class="col">
+    <h2>Tailored Resume</h2>
+    <form action="{{ url_for('main.save_draft') }}" method="post">
+      <input type="hidden" name="analysis_id" value="{{ analysis.id }}" />
+      <textarea id="tailored" name="tailored_text" rows="28">{{ analysis.tailored_text }}</textarea>
+      <div class="actions">
+        <button type="submit">Save Draft</button>
+        <a class="button" href="{{ url_for('main.download_docx', analysis_id=analysis.id) }}">Download DOCX</a>
+      </div>
+    </form>
+  </div>
+  <div class="col">
+    <h2>ATS Score</h2>
+    <div id="score" class="score">{{ '%.1f' % scoring.score }}</div>
+    <h3>Matched Keywords</h3>
+    <ul id="matched">
+      {% for kw in scoring.matched_keywords %}
+        <li>{{ kw }}</li>
+      {% endfor %}
+    </ul>
+    <h3>Missing Keywords</h3>
+    <ul id="missing">
+      {% for kw in scoring.missing_keywords %}
+        <li>{{ kw }}</li>
+      {% endfor %}
+    </ul>
+
+    <h2>Job Description</h2>
+    <pre id="job_text">{{ job.text }}</pre>
+  </div>
+</section>
+<script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+<script>
+  window.__JOB_TEXT__ = `{{ job.text | replace("`", "'") | replace("\\", "\\\\") }}`;
+</script>
+{% endblock %}
